@@ -40,7 +40,7 @@ export async function GET(request) {
   const cols = Math.max(3, parseInt(searchParams.get("cols") || "15", 10));
   const dotScale = Math.min(0.9, Math.max(0.1, parseFloat(searchParams.get("dotScale") || "0.4")));
   const marginPct = Math.min(0.4, Math.max(0.02, parseFloat(searchParams.get("margin") || "0.18")));
-const topOffset = Math.round(height * 0.08)
+const topOffset = Math.round(height * 0.20)
   const start = parseDate(startParam);
   const end = parseDate(endParam);
 
