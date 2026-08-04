@@ -1,15 +1,22 @@
-{
-  "name": "goal-grid-wallpaper",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "next": "14.2.35",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
-  }
+export const metadata = {
+  title: "Goal Grid Wallpaper",
+  description: "A dot-grid countdown wallpaper generator, from one date to another.",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body
+        style={{
+          margin: 0,
+          background: "#000",
+          color: "#fff",
+          fontFamily:
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        }}
+      >
+        {children}
+      </body>
+    </html>
+  );
 }
