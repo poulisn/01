@@ -210,7 +210,7 @@ export async function GET(request) {
             style={{
               display: "flex",
               alignItems: "baseline",
-              marginTop: Math.round(height * 0.025),
+              marginTop: Math.round(height * 0.030),
               fontSize: labelFontSize,
               fontWeight: 600,
             }}
