@@ -43,7 +43,7 @@ export async function GET(request) {
 const topOffset = Math.round(height * 0.20)
   const start = parseDate(startParam);
   const end = parseDate(endParam);
-
+const topMargin = Math.round(height * 0.20);
   if (!start || !end) {
     return new Response("Missing or invalid dates. Use ?start=YYYY-MM-DD&end=YYYY-MM-DD", { status: 400 });
   }
@@ -109,6 +109,7 @@ style={{
   paddingTop: topOffset,
   fontFamily,
 }}
+<div style={{ height: topMargin }} />
         {name ? (
           <div style={{ display: "flex", color: accent, fontSize: nameFontSize, fontWeight: 600, opacity: 0.9, marginBottom: Math.round(height * 0.02), letterSpacing: 1 }}>
             {name}
