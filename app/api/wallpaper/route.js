@@ -64,8 +64,13 @@ export async function GET(request) {
     Math.max(0.02, parseFloat(searchParams.get("margin") || "0.18"))
   );
 
-  // Increase/decrease this to move everything lower/higher
-  const topOffset = Math.round(height * 0.20);
+  // Vertical offset: fraction of image height to push content down from the top.
+  // Overridable via ?offset=0.25 (0 = flush top, 0.5 = roughly centered).
+  const offsetPct = Math.min(
+    0.8,
+    Math.max(0, parseFloat(searchParams.get("offset") || "0.28"))
+  );
+  const topOffset = Math.round(height * offsetPct);
 
   const start = parseDate(startParam);
   const end = parseDate(endParam);
@@ -83,10 +88,7 @@ export async function GET(request) {
     Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
   );
 
-  const totalDays = Math.max(
-    1,
-    Math.round((end - start) / MS_PER_DAY)
-  );
+  const totalDays = Math.max(1, Math.round((end - start) / MS_PER_DAY));
 
   let elapsedDays = Math.round((today - start) / MS_PER_DAY);
   elapsedDays = Math.max(0, Math.min(elapsedDays, totalDays));
@@ -119,9 +121,7 @@ export async function GET(request) {
 
   try {
     const sampleText =
-      (name || "") +
-      labelText +
-      "% complete0123456789· Today";
+      (name || "") + labelText + "% complete0123456789· Today";
 
     const [regular, medium] = await Promise.all([
       loadGoogleFont("Geist", 400, sampleText),
@@ -129,31 +129,16 @@ export async function GET(request) {
     ]);
 
     if (regular) {
-      fonts = [
-        {
-          name: "Geist",
-          data: regular,
-          weight: 400,
-          style: "normal",
-        },
-      ];
-
+      fonts = [{ name: "Geist", data: regular, weight: 400, style: "normal" }];
       if (medium) {
-        fonts.push({
-          name: "Geist",
-          data: medium,
-          weight: 600,
-          style: "normal",
-        });
+        fonts.push({ name: "Geist", data: medium, weight: 600, style: "normal" });
       }
     }
   } catch (e) {
     fonts = undefined;
   }
 
-  const fontFamily = fonts
-    ? "Geist"
-    : "-apple-system, sans-serif";
+  const fontFamily = fonts ? "Geist" : "-apple-system, sans-serif";
 
   return new ImageResponse(
     (
@@ -165,6 +150,9 @@ export async function GET(request) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          // "flex-start" anchors the block to the top; topOffset (padding)
+          // is what actually pushes it down. Increase ?offset= to push
+          // further down, decrease to bring it back up.
           justifyContent: "flex-start",
           paddingTop: topOffset,
           fontFamily,
@@ -227,27 +215,11 @@ export async function GET(request) {
               fontWeight: 600,
             }}
           >
-            <span style={{ color: accent }}>
-              {labelText}
-            </span>
-
-            <span
-              style={{
-                color: "#8a8a8a",
-                marginLeft: 10,
-                marginRight: 10,
-                fontWeight: 400,
-              }}
-            >
+            <span style={{ color: accent }}>{labelText}</span>
+            <span style={{ color: "#8a8a8a", marginLeft: 10, marginRight: 10, fontWeight: 400 }}>
               ·
             </span>
-
-            <span
-              style={{
-                color: "#8a8a8a",
-                fontWeight: 400,
-              }}
-            >
+            <span style={{ color: "#8a8a8a", fontWeight: 400 }}>
               {percent}% complete
             </span>
           </div>
@@ -258,5 +230,9 @@ export async function GET(request) {
       width,
       height,
       fonts,
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
     }
   );
+}
