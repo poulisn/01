@@ -41,6 +41,7 @@ export async function GET(request) {
   const dotScale = Math.min(0.9, Math.max(0.1, parseFloat(searchParams.get("dotScale") || "0.4")));
   const marginPct = Math.min(0.4, Math.max(0.02, parseFloat(searchParams.get("margin") || "0.18")));
   const showDots = (searchParams.get("dots") || "off") === "on";
+  const textOffset = parseInt(searchParams.get("textOffset") || "0", 10);
 
   const start = parseDate(startParam);
   const end = parseDate(endParam);
@@ -117,7 +118,7 @@ export async function GET(request) {
         </div>
 
         {showLabel ? (
-          <div style={{ display: "flex", alignItems: "baseline", marginTop: Math.round(height * 0.025), fontSize: labelFontSize, fontWeight: 600 }}>
+          <div style={{ display: "flex", alignItems: "baseline", marginTop: Math.round(height * 0.025) + textOffset, fontSize: labelFontSize, fontWeight: 600 }}>
             <span style={{ color: accent }}>{labelText}</span>
             <span style={{ color: "#8a8a8a", marginLeft: 10, marginRight: 10, fontWeight: 400 }}>·</span>
             <span style={{ color: "#8a8a8a", fontWeight: 400 }}>{percent}% complete</span>
